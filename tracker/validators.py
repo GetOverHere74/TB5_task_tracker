@@ -39,6 +39,7 @@ class NestingOfTaskValid:
 
     def __call__(self, value):
         parent_task = value.get(self.field)
-        if parent_task.parent_task is not None:
-            if parent_task.parent_task.parent_task is not None:
-                raise ValidationError("Вложенность задач не более 3")
+        if parent_task is not None:
+            if parent_task.parent_task is not None:
+                if parent_task.parent_task.parent_task is not None:
+                    raise ValidationError("Вложенность задач не более 3")
