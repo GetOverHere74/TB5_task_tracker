@@ -256,3 +256,101 @@ class TaskTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(Task.objects.all().count(), 1)
+
+
+class TaskModeratorTestCase(APITestCase):
+    """Тесты для модели задачи модератора"""
+
+    def setUp(self):
+        self.user = User.objects.create(email="moderator@test.ru", is_staff=True)
+        self.my_group = Group.objects.create(name="moderator")
+        self.user.groups.add(self.my_group)
+        self.employee = Employee.objects.create(
+            full_name="Test Testov", position="Moderator", user=self.user
+        )
+        self.task = Task.objects.create(
+            id=1,
+            title="test",
+            description="test",
+            status="In Progress",
+            time_complete="2024-10-05T12:00:00Z",
+            is_active=False,
+            is_related=False,
+            executor=None,
+            parent_task=None,
+        )
+        self.client.force_authenticate(user=self.user)
+
+    def test_task_create(self):
+        """Тестирование создания задачи модератором"""
+        url = reverse("tracker:task_create")
+        data = {
+            "title": "Test NEW 2",
+            "description": "test2",
+            "status": "ToDo",
+            "parent_task": 1,
+            "is_active": False,
+            "is_related": True,
+        }
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Task.objects.all().count(), 2)
+
+    def test_task_update(self):
+        """Тестирование изменения задачи модератором"""
+        url = reverse("tracker:task_update", args=(self.task.pk,))
+        data = {"title": "Test title NEW"}
+        response = self.client.patch(url, data)
+        data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("title"), "Test title NEW")
+
+    def test_task_delete(self):
+        """Тестирование удаления задачи модератором"""
+        url = reverse("tracker:task_delete", args=(self.task.pk,))
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Task.objects.all().count(), 0)
+
+    def test_related_task_validator(self):
+        """Тестирование валидации связанности задачи"""
+        url = reverse("tracker:task_create")
+        data = {
+            "title": "Test NEW 2",
+            "description": "test2",
+            "status": "ToDo",
+            "parent_task": 1,
+            "is_active": False,
+            "is_related": False,
+        }
+        response = self.client.post(url, data)
+        data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            data.get("non_field_errors"),
+            ["Задача должна быть связана с родительской"],
+        )
+
+    def test_status_task_validator(self):
+        """Тестирование валидации статуса задачи"""
+        url = reverse("tracker:task_create")
+        data = {
+            "title": "Test NEW 2",
+            "description": "test2",
+            "status": "ToDo",
+            "parent_task": 1,
+            "is_active": True,
+            "is_related": True,
+        }
+        response = self.client.post(url, data)
+        data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            data.get("non_field_errors"),
+            ["Активная задача должна иметь статус In Progress"],
+        )
