@@ -169,3 +169,90 @@ class EmployeeModeratorTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data, result)
+
+
+class TaskTestCase(APITestCase):
+    """Тестирование модели задачи"""
+
+    def setUp(self):
+        self.user = User.objects.create(email="test@test.ru")
+        self.employee = Employee.objects.create(
+            full_name="Test Testov", position="Test", user=self.user
+        )
+        self.task = Task.objects.create(
+            id=1,
+            title="test",
+            description="test",
+            status="In Progress",
+            time_complete="2024-10-05T12:00:00Z",
+            is_active=False,
+            is_related=False,
+            executor=None,
+            parent_task=None,
+        )
+        self.client.force_authenticate(user=self.user)
+
+    def test_task_retrieve(self):
+        """Тестирование вывода одной задачи"""
+        url = reverse("tracker:task_retrieve", args=(self.task.pk,))
+        response = self.client.get(url)
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data["title"], self.task.title)
+        self.assertEqual(data["description"], self.task.description)
+
+    def test_task_list(self):
+        """Тестирование вывода списка задач"""
+        url = reverse("tracker:task_list")
+        response = self.client.get(url)
+        data = response.json()
+        result = [
+            {
+                "id": self.task.pk,
+                "title": self.task.title,
+                "description": self.task.description,
+                "status": self.task.status,
+                "time_complete": self.task.time_complete,
+                "is_active": False,
+                "is_related": False,
+                "executor": None,
+                "parent_task": self.task.parent_task,
+            }
+        ]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data, result)
+
+    def test_task_create(self):
+        """Тестирование создания задачи"""
+        url = reverse("tracker:task_create")
+        data = {
+            "title": "Test NEW 2",
+            "description": "test2",
+            "status": "ToDo",
+            "parent_task": 1,
+            "is_active": False,
+            "is_related": True,
+        }
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Task.objects.all().count(), 1)
+
+    def test_task_update(self):
+        """Тестирование изменения задачи"""
+        url = reverse("tracker:task_update", args=(self.task.pk,))
+        data = {"title": "Test title NEW"}
+        response = self.client.patch(url, data)
+        data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(data.get("title"), None)
+
+    def test_task_delete(self):
+        """Тестирование удаления задачи модератором"""
+        url = reverse("tracker:task_delete", args=(self.task.pk,))
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Task.objects.all().count(), 1)
