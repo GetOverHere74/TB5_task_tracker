@@ -66,12 +66,10 @@ class ImportantTaskSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_employees(self):
         important_tasks = Task.objects.filter(
-            Q(is_active=False)
-            & (
-                Q(parent_task__is_active=True)
-                | Q(parent_task__parent_task__is_active=True)
-                | Q(parent_task__parent_task__parent_task__is_active=True)
-            )
+            Q(is_active=False) & (Q(parent_task__is_active=True) |
+                                  Q(parent_task__parent_task__is_active=True) |
+                                  Q(parent_task__parent_task__parent_task__is_active=True)
+                                  )
         )
         imp_task_id = []
         for task in important_tasks:

@@ -99,11 +99,8 @@ class ImportantTasksAPIView(ListAPIView):
     serializer_class = ImportantTaskSerializer
 
     def get_queryset(self, *args, **kwargs):
-        return Task.objects.filter(
-            Q(is_active=False)
-            & (
-                Q(parent_task__is_active=True)
-                | Q(parent_task__parent_task__is_active=True)
-                | Q(parent_task__parent_task__parent_task__is_active=True)
-            )
-        )
+        return Task.objects.filter(Q(is_active=False) & (Q(parent_task__is_active=True) |
+                                                         Q(parent_task__parent_task__is_active=True) |
+                                                         Q(parent_task__parent_task__parent_task__is_active=True)
+                                                         )
+                                   )
