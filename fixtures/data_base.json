@@ -1,0 +1,146 @@
+[
+  {
+    "model":"tracker.employee",
+    "pk":1,
+    "fields":{
+      "user":3,
+      "full_name":"Test Testov",
+      "position":"Тестер"
+    }
+  },
+  {
+    "model":"tracker.employee",
+    "pk":2,
+    "fields":{
+      "user":4,
+      "full_name":"Тест Тестов",
+      "position":"Тестировщик2"
+    }
+  },
+  {
+    "model":"tracker.task",
+    "pk":1,
+    "fields":{
+      "title":"Первый пуск",
+      "description":"Проверить работоспособность проекта",
+      "executor":1,
+      "status":"Done",
+      "time_complete":"2024-11-13T11:05:24Z",
+      "parent_task":null,
+      "is_active":false,
+      "is_related":false
+    }
+  },
+  {
+    "model":"tracker.task",
+    "pk":2,
+    "fields":{
+      "title":"Проверка2",
+      "description":"Проверка связонности",
+      "executor":1,
+      "status":null,
+      "time_complete":null,
+      "parent_task":null,
+      "is_active":false,
+      "is_related":false
+    }
+  },
+  {
+    "model":"tracker.task",
+    "pk":3,
+    "fields":{
+      "title":"Новая проверка",
+      "description":"Родительская задача",
+      "executor":2,
+      "status":null,
+      "time_complete":"2024-11-13T13:03:50Z",
+      "parent_task":2,
+      "is_active":true,
+      "is_related":true
+    }
+  },
+  {
+    "model":"tracker.task",
+    "pk":4,
+    "fields":{
+      "title":"Вложенность",
+      "description":"Проверка вложенности",
+      "executor":2,
+      "status":null,
+      "time_complete":null,
+      "parent_task":1,
+      "is_active":true,
+      "is_related":true
+    }
+  },
+  {
+    "model":"tracker.task",
+    "pk":5,
+    "fields":{
+      "title":"Test3",
+      "description":"Test3",
+      "executor":2,
+      "status":"In Progress",
+      "time_complete":null,
+      "parent_task":3,
+      "is_active":true,
+      "is_related":true
+    }
+  },
+  {
+    "model":"tracker.task",
+    "pk":6,
+    "fields":{
+      "title":"Доставка",
+      "description":"Доставить важный груз",
+      "executor":2,
+      "status":"In Progress",
+      "time_complete":null,
+      "parent_task":3,
+      "is_active":true,
+      "is_related":true
+    }
+  },
+  {
+    "model":"tracker.task",
+    "pk":7,
+    "fields":{
+      "title":"Доставка2",
+      "description":"Доставить важный груз2",
+      "executor":2,
+      "status":"In Progress",
+      "time_complete":null,
+      "parent_task":3,
+      "is_active":true,
+      "is_related":true
+    }
+  },
+  {
+    "model":"tracker.task",
+    "pk":8,
+    "fields":{
+      "title":"Обслуживание и ТО",
+      "description":"После доставки провести обслуживание авто",
+      "executor":2,
+      "status":"In Progress",
+      "time_complete":null,
+      "parent_task":3,
+      "is_active":true,
+      "is_related":true
+    }
+  },
+  {
+    "model":"tracker.task",
+    "pk":9,
+    "fields":{
+      "title":"Test4",
+      "description":"Test4",
+      "executor":2,
+      "status":"ToDo",
+      "time_complete":null,
+      "parent_task":3,
+      "is_active":false,
+      "is_related":true
+    }
+  }
+]
