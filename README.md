@@ -21,3 +21,56 @@
 - DRF
 - PostgreSQL
 - Docker
+
+### **Запуск проекта в Docker:**
+#### 1. Установка Docker
+Установите Docker на вашей ОС.
+#### 2. Клонирование репозитория
+Склонируйте репозиторий с github с помощью команды `git clone`
+#### 3. Настройка файла _.env_
+Создайте файл _.env_ в корневой директории проекта. В файле необходимо внести переменные окружения, образец есть в  [.env_sample](.env_sample)
+#### 4. Запуск контейнеров Docker
+- Откройте терминал и перейдите в корневую директорию проекта
+- Введите команду:
+>`docker-compose build up -d --build`
+
+Для запуска контейнеров описанных в [docker-compose.yaml](docker-compose.yaml) 
+
+Дождитесь запуска всех контейнеров.
+#### 5. Проверка
+Откройте веб-браузер и перейдите по указанному вами адресу и порту, чтобы, убедиться что приложение работает.
+#### 6. Остановка приложения
+Чтобы остановить работу приложения, введите в терминал команду `docker-compose down` 
+
+### **URL**
+- **[POST]** http://localhost:8000/users/register/ - Создание юзера.
+
+- **[POST]** http://localhost:8000/users/token/ - Создание JWT токена.
+
+- **[POST]** http://localhost:8000/users/token/refresh/ - Обновление JWT токена.
+
+- **[GET]** http://localhost:8000/employees/ - Просмотр списка сотрудников.
+
+- **[GET]** http://localhost:8000/employees/{id}/ - Просмотр сотрудника.
+
+- **[POST]** http://localhost:8000/employees/ - Создание сотрудника.
+
+- **[PATCH]** http://localhost:8000/employees/{id}/ - Редактирование сотрудника.
+
+- **[DELETE]** http://localhost:8000/employees/{id}/ - Удаление сотрудника.
+
+- **[GET]** http://localhost:8000/task/task_list/ - Просмотр списка задач.
+
+- **[GET]** http://localhost:8000/task/retrieve/{id}/ - Просмотр задачи.
+
+- **[POST]** http://localhost:8000/task/create/ - Создание задачи.
+
+- **[PATCH]** http://localhost:8000/task/update/{id}/ - Редактирование задачи.
+
+- **[DELETE]** http://localhost:8000/task/delete/{id}/ - Удаление задачи.
+
+- **[GET]** http://localhost:8000/employee_track/employee_track_list/ - Просмотр для подсчета активных задач работника.
+
+- **[GET]** http://localhost:8000/important_tasks/important_tasks_list/ - Поиск менее загруженных сотрудников для важных задач.
+
+- http://127.0.0.1:8000/swagger/, http://127.0.0.1:8000/redoc/ - документация для API
